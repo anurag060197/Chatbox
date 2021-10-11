@@ -42,11 +42,6 @@
         form.addEventListener('submit', function(e){
             e.preventDefault();
             if(input.value){
-                // let obj = {
-                //     sender: user,
-                //     message: input.value
-                // }
-            //  addChat(obj);
                 socket.emit('chat message', user, input.value);
                 input.value = '';
             }
@@ -79,6 +74,18 @@
         socket.on('user disconnected', (user, str)=>addNotification(user, str));
 
         socket.on('user conneceted', (user, str)=>addNotification(user, str));
+
+        socket.on('output-messages', (result)=>{
+            console.log(result);
+            result.forEach(obj=>{
+                if(obj.message === 'joined')
+                    addNotification(obj.sender, obj.message);
+                else if(obj.message === 'left')
+                    addNotification(obj.sender, obj.message);
+                else
+                    addMessage(obj.sender, obj.message)
+            });
+        });
     </script>
 </body>
 </html>
